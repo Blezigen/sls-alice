@@ -1,0 +1,17 @@
+<?php
+
+namespace common\modules\order;
+
+class SettingConstant
+{
+    public const PLUGIN_SECTION = 'PS_ORDER_22092022';
+
+    public const AUTO_RESERVATION_DAYS = self::PLUGIN_SECTION . '_AUTO_RESERVATION_DAYS';
+
+    public const MAX_DISCOUNT = self::PLUGIN_SECTION . '_MAX_DISCOUNT';
+
+    public const MAX_COUNT_RECEIPT_NOT_PAYMENT = self::PLUGIN_SECTION . '_MAX_COUNT_RECEIPT_NOT_PAYMENT';
+    public const MAX_COUNT_RESERVE_NOT_PAYMENT = self::PLUGIN_SECTION . '_MAX_COUNT_RESERVE_NOT_PAYMENT';
+    public const MAX_COUNT_RESERVE_CABIN = self::PLUGIN_SECTION . '_MAX_COUNT_RESERVE_CABIN';
+    public const COUNT_EXPIRED_DAYS_FOR_FILTER = self::PLUGIN_SECTION . '_COUNT_EXPIRED_DAYS_FOR_FILTER';
+}

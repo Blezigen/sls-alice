@@ -1,0 +1,113 @@
+{
+    "name": "redbox/template",
+    "description": "Гермес.Речка (Теплоходы)",
+    "keywords": [
+        "yii2",
+        "framework",
+        "advanced",
+        "project template"
+    ],
+    "homepage": "https://www.yiiframework.com/",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/yiisoft/yii2/issues?state=open",
+        "forum": "https://www.yiiframework.com/forum/",
+        "wiki": "https://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "source": "https://github.com/yiisoft/yii2"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">= 8.1",
+        "yiisoft/yii2": "~2.0.46",
+        "yiisoft/yii2-bootstrap": "~2.0.0",
+        "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
+        "firebase/php-jwt": "^5.2",
+        "yiisoft/yii2-httpclient": "^2.0",
+        "yiisoft/yii2-queue": "^2.3",
+        "yiithings/yii2-dotenv": "@dev",
+        "nesbot/carbon": "^2.53",
+        "symfony/var-dumper": "^5.3",
+        "twig/twig": "^3.3",
+        "ext-json": "*",
+        "antonyz89/yii2-seeder": "dev-master",
+        "guzzlehttp/guzzle": "^7.3",
+        "voronkovich/sberbank-acquiring-client": "^2.7",
+        "filsh/yii2-oauth2-server": "^2.1",
+        "yiithings/yii2-softdelete": "dev-master",
+        "yiisoft/yii2-debug": "^2.1",
+        "yii2mod/yii2-settings": "*",
+        "casbin/yii-permission": "dev-master",
+        "rdbx/yii2-user-setting": "8.1.*",
+        "rdbx/yii2-json-rpc": "8.1.*",
+        "mustache/mustache": "dev-main",
+        "phpoffice/phpspreadsheet": "dev-master",
+        "kilylabs/qr-payment-php": "dev-master",
+        "yiisoft/yii2-psr-log-source": "2.0.x-dev",
+        "yiisoft/yii2-redis": "2.0.x-dev",
+        "omnilight/yii2-scheduling": "dev-master",
+        "la-haute-societe/yii2-save-relations-behavior": "dev-master",
+        "tuyakhov/yii2-notifications": "dev-master",
+        "jasny/phpdoc-parser": "dev-master",
+        "phpdocumentor/type-resolver": "1.x-dev",
+        "nette/php-generator": "4.0.x-dev"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "~3.0",
+        "yiisoft/yii2-gii": "~2.1.0",
+        "yiisoft/yii2-faker": "~2.0.0",
+        "codeception/codeception": "^4.0",
+        "codeception/module-asserts": "^1.0",
+        "codeception/module-yii2": "^1.0",
+        "codeception/module-filesystem": "^1.0",
+        "codeception/verify": "~0.5.0 || ~1.1.0",
+        "symfony/browser-kit": ">=2.7 <=4.2.4",
+        "zircote/swagger-php": "^3.2",
+        "codeception/module-phpbrowser": "^1.0.0",
+        "codeception/module-rest": "^2.0",
+        "codeception/module-db": "^2.0",
+        "codeception/module-datafactory": "^2.0",
+        "bizley/migration": "dev-master"
+    },
+    "config": {
+        "process-timeout": 1800,
+        "fxp-asset": {
+            "enabled": false
+        },
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "vcs",
+            "url": "git@git.rdbx24.ru:template/yii2-user-setting.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@git.rdbx24.ru:template/yii2-json-rpc.git"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "api\\": "api/",
+            "common\\": "common/",
+            "console\\": "console/",
+            "tests\\": "tests/",
+            "doc\\": "doc/"
+        }
+    },
+    "scripts": {
+        "hooks": "git config core.hooksPath hooks",
+        "phpcs": "php-cs-fixer fix -v --diff --dry-run",
+        "test": [
+            "@phpcs"
+        ]
+    },
+    "version": "0.0.2"
+}

@@ -1,0 +1,99 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body>
+        <GetPoliciesByPolicyNumberResponse xmlns="https://ti.alfastrah.ru/InsuranceAlfaService">
+            <GetPoliciesByPolicyNumberResult xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                <policy>
+                    <common>
+                        <addressTel/>
+                        <assistanceCode>GA</assistanceCode>
+                        <assistanceID>0ccea08c-eab4-4799-8e1a-56615d7b4d87</assistanceID>
+                        <assistanceName>GLOBAL VOYAGER ASSISTANCE (CYPRUS) Ltd.</assistanceName>
+                        <assistancePhones>Для звонков из любой точки мира +7(495) 775-09-99 Italy - 800 787 235,
+                            Bulgaria - +359 2 439 44 44, Austria - 0 800 291 976, Finland - 0 800 116 696, Germany - 0
+                            800 182 40 65, Spain - 900 993 570, Greece - 00 800 357 129 23 00, Egypt- + 20(10) 648 99
+                            22, Cyprus - +357 (24) 62 50 99, Thailand - 001 800 357 12 95, Turkey- +90 (242) 824 97 70,
+                            France - 0 800 900 998, Switzerland - +41 44 201 06 79
+                        </assistancePhones>
+                        <comments/>
+                        <countryName>Schengen, Italy</countryName>
+                        <countryUID>1d924ea0-35e6-4402-9e14-cb639d0e29fb</countryUID>
+                        <depCode>0371</depCode>
+                        <dtCreated>2011-09-14T00:00:00</dtCreated>
+                        <eurRate>41.2267</eurRate>
+                        <fio>ЦКП НАСЛЕДИЕ</fio>
+                        <insuranceProgramm>Эконом</insuranceProgramm>
+                        <insuranceProgrammPrintName>Эконом (B)</insuranceProgrammPrintName>
+                        <insuranceProgrammUID>3ca5b23c-7daa-4478-a20f-d1ecb1c4f8db</insuranceProgrammUID>
+                        <multiDays>6</multiDays>
+                        <plicyConfirmDate>2011-09-14T18:58:00</plicyConfirmDate>
+                        <policyID>1360093</policyID>
+                        <policyLink>https://ti.alfastrah.ru/elpolicy.asp?g={44CF7929-375B-4753-9048-492C987C2169}</policyLink>
+                        <policyNumber>GA-DTS010457</policyNumber>
+                        <policyPeriodFrom>2011-10-06T00:00:00</policyPeriodFrom>
+                        <policyPeriodTill>2011-10-11T23:59:59</policyPeriodTill>
+                        <policyPlace>MOSCOW, RUSSIA</policyPlace>
+                        <policyStatus>Active</policyStatus>
+                        <policyUID>44cf7929-375b-4753-9048-492c987c2169</policyUID>
+                        <premRUR>149.65</premRUR>
+                        <territory>Т-1</territory>
+                        <territoryENG>WORLDWIDE, EXCLUDING RUSSIA, JAPAN, USA, CANADA, AUSTRALIA, CARIBBES AND
+                            INHABITANCY
+                        </territoryENG>
+                        <territoryRUR>Все страны мира за исключением стран кариcкого бассейна и страны постоянного
+                            проживания.
+                        </territoryRUR>
+                        <usdRate>30.1872</usdRate>
+                        <userId>55f6d7c8-5790-4a7d-bfb6-3ca4b3aa8973</userId>
+                    </common>
+                    <insureds>
+                        <insured>
+                            <dateOfBirth>1955-06-13T00:00:00</dateOfBirth>
+                            <fio>IRA TREGULOVA</fio>
+                            <insuredID>1990540</insuredID>
+                        </insured>
+                    </insureds>
+                    <regionsExcl>
+                        <region>ABW</region>
+                        <region>AIA</region>
+                        <region>ANT</region>
+                        <region>ATG</region>
+                        <region>BHS</region>
+                        <region>BRB</region>
+                        <region>CAN</region>
+                        <region>CUB</region>
+                        <region>CYM</region>
+                        <region>DMA</region>
+                        <region>DOM</region>
+                        <region>GLP</region>
+                        <region>GRD</region>
+                        <region>JAM</region>
+                        <region>JPN</region>
+                        <region>LCA</region>
+                        <region>MSR</region>
+                        <region>MTQ</region>
+                        <region>PRI</region>
+                        <region>RUS</region>
+                        <region>TCA</region>
+                        <region>TTO</region>
+                        <region>USA</region>
+                        <region>VCT</region>
+                        <region>VGB</region>
+                        <region>VIR</region>
+                    </regionsExcl>
+                    <regionsIncl/>
+                    <risks>
+                        <risk>
+                            <amountAtRisk>30000.00</amountAtRisk>
+                            <amountCurrency>EUR</amountCurrency>
+                            <franshize>0</franshize>
+                            <premCurrency>3.63</premCurrency>
+                            <premRUR>149.65</premRUR>
+                            <riskName>Медицинские и иные расходы</riskName>
+                            <riskUID>336a5312-1592-4716-b266-eae69e0a0297</riskUID>
+                        </risk>
+                    </risks>
+                </policy>
+            </GetPoliciesByPolicyNumberResult>
+        </GetPoliciesByPolicyNumberResponse>
+    </s:Body>
+</s:Envelope>

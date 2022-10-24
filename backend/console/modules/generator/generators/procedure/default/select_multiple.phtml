@@ -1,0 +1,84 @@
+<?php
+/**
+ * This is the template for generating the model class of a specified table.
+ */
+
+/* @var $this yii\web\View */
+/* @var $generator yii\gii\generators\model\Generator */
+/* @var $sourceTableName string full table name */
+/* @var $metaTableName string full table name */
+/* @var $filePrefix string prefix */
+/* @var $arguments array prefix */
+/* @var $columns array prefix */
+/* @var $selectTableArguments array prefix */
+
+echo "<?php\n\n";
+
+$class = new Nette\PhpGenerator\ClassType("{$name}_select");
+
+$class->setExtends(\console\MigrationSFunction::class);
+
+$class->addProperty("lastChanges")
+    ->setProtected()
+    ->setType("string")
+    ->setValue(\Carbon\Carbon::now()->format("Y-m-d H:i:s"));
+
+$class->addProperty("functionName")
+    ->setProtected()
+    ->setType("string")
+    ->setValue("{$name}_select");
+
+$args = implode(",\n",array_map(function ($data) {
+    return "\"p_$data\"";
+}, [
+    "id int"
+]));
+
+$returnArgs = implode(",\n",array_map(function ($data) {
+    return "\"p_$data\"";
+}, $arguments));
+
+$selectTableArguments = implode(",\n",array_map(function ($data) {
+    return "\"$data\"";
+},$selectTableArguments));
+
+$selectArguments = implode(",\n",array_map(function ($data) use ($name) {
+    return "\"\\\"$name\\\".\\\"$data\\\"\"";
+},$selectArguments));
+
+$columns = implode(",\n",array_map(function ($data) {
+    return "\"$data\"";
+},$columns));
+
+$class->addMethod("getArgument")->setBody("
+\$columns = [
+];
+return implode(\",\",\$columns);
+");
+
+$class->addMethod("getReturn")->setBody("
+\$columns = [
+$selectTableArguments
+];
+
+return \"table(\".implode(',',\$columns).\")\";
+");
+
+$class->addMethod("getBody")->setBody("
+
+\$TABLE = \"$name\";
+
+\$COLUMNS = [
+$selectArguments
+];
+\$COLUMNS = implode(\",\",\$COLUMNS);
+
+return \"return query select {\$COLUMNS} from {\$TABLE};\";
+        
+");
+
+
+// to generate PHP code simply cast to string or use echo:
+echo $class;
+
+?>

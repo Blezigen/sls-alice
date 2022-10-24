@@ -1,0 +1,22 @@
+actor: ApiTester
+bootstrap: _bootstrap.php
+modules:
+    enabled:
+        - \Helper\Api
+        - Yii2:
+              part: [ orm, email ]
+              configFile: tests/config/main.php
+              transaction: false
+              cleanup: true
+        - PhpBrowser:
+              url: "%FRONTEND_URL%"
+        - REST:
+              depends: PhpBrowser
+              url: '%FRONTEND_URL%/api/'
+              shortDebugResponse: 300
+#        - Db:
+#              dsn: 'mysql:host=%DB_HOST%;port=%DB_PORT%dbname=%DB_DATABASE%'
+#              user: '%DB_USERNAME%'
+#              password: '%DB_PASSWORD%'
+#              dump:
+#                - 'tests/_data/dump.sql'

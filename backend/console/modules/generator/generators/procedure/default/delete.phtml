@@ -1,0 +1,58 @@
+<?php
+/**
+ * This is the template for generating the model class of a specified table.
+ */
+
+/* @var $this yii\web\View */
+/* @var $generator yii\gii\generators\model\Generator */
+/* @var $sourceTableName string full table name */
+/* @var $metaTableName string full table name */
+/* @var $filePrefix string prefix */
+
+echo "<?php\n\n";
+
+$class = new Nette\PhpGenerator\ClassType("{$name}_delete");
+
+$class->setExtends(\console\MigrationSProcedure::class);
+
+$class->addProperty("lastChanges")
+    ->setProtected()
+    ->setType("string")
+    ->setValue(\Carbon\Carbon::now()->format("Y-m-d H:i:s"));
+
+$class->addProperty("procedureName")
+    ->setProtected()
+    ->setType("string")
+    ->setValue("{$name}_delete");
+
+$class->addMethod("getArgument")->setBody("
+\$columns = [
+    \"p_id int\",
+    \"account uuid\",
+];
+return implode(\",\",\$columns);
+");
+
+$class->addMethod("getBody")->setBody("
+
+\$TABLE = \"$name\";
+\$SET = [
+    \"{\$TABLE}.deleted_at = now()\",
+    \"{\$TABLE}.deleted_acc = account\"
+];
+\$SET = implode(\",\", \$SET);
+
+return \"
+    UPDATE 
+        {\$TABLE} 
+    SET {\$SET}
+    WHERE {\$TABLE}.\\\"id\\\" = p_id;
+\";
+        
+");
+
+
+// to generate PHP code simply cast to string or use echo:
+echo $class;
+
+?>

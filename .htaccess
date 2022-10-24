@@ -1,0 +1,41 @@
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    Options +FollowSymlinks
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_URI} ^/url/wiki/$
+    RewriteRule ^.*$ http://git.rdbx24.ru/germes/germes.river.backend/-/wikis/home [R=301]
+
+    RewriteCond %{REQUEST_URI} ^/url/bug/$
+    RewriteRule ^.*$ http://git.rdbx24.ru/germes/germes.river.backend/-/issues [R=301]
+
+    RewriteCond %{REQUEST_URI} ^/url/git/$
+    RewriteRule ^.*$ http://git.rdbx24.ru/germes/germes.river.backend [R=301]
+
+    RewriteCond %{REQUEST_URI} ^/([^//]*)/assets/(/?.*)$
+    RewriteRule ^(.*)/assets/(.*)$ backend/$1/web/assets/$2 [NC,L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteCond %{REQUEST_URI} ^/(api)
+    RewriteRule ^.*$ backend/api/web/index.php [L]
+
+    RewriteCond %{REQUEST_URI} ^/(doc)
+    RewriteRule ^.*$ backend/doc/web/index.php [L]
+
+    RewriteCond %{REQUEST_URI} ^/cdn(/?.*)$
+    RewriteRule ^cdn/(.*)$ storage/public/$1 [NC,L]
+
+
+    RewriteCond %{REQUEST_URI} /favicon.ico$
+    RewriteRule ^favicon.ico$ frontend/favicon.ico [L]
+
+    RewriteCond %{REQUEST_URI} ^/(_nuxt|img)(/?.*)$
+    RewriteRule ^([^/]*)/(.*)$ frontend/$1/$2 [L]
+
+    RewriteRule ^$ frontend/index.php
+</IfModule>

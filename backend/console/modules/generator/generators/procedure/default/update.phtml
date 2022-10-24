@@ -1,0 +1,68 @@
+<?php
+/**
+ * This is the template for generating the model class of a specified table.
+ */
+
+/* @var $this yii\web\View */
+/* @var $generator yii\gii\generators\model\Generator */
+/* @var $sourceTableName string full table name */
+/* @var $metaTableName string full table name */
+/* @var $filePrefix string prefix */
+/* @var $arguments array prefix */
+/* @var $columns array prefix */
+
+echo "<?php\n\n";
+
+$class = new Nette\PhpGenerator\ClassType("{$name}_update");
+
+$class->setExtends(\console\MigrationSProcedure::class);
+
+$class->addProperty("lastChanges")
+    ->setProtected()
+    ->setType("string")
+    ->setValue(\Carbon\Carbon::now()->format("Y-m-d H:i:s"));
+
+$class->addProperty("procedureName")
+    ->setProtected()
+    ->setType("string")
+    ->setValue("{$name}_update");
+
+$arguments = implode(",\n",array_map(function ($data) {
+    return "\"p_$data\"";
+},$arguments));
+
+$insertedColumns = implode(",\n",array_map(function ($data) {
+    return "\"p_$data\"";
+},$columns));
+
+$SET = implode(",\n",array_map(function ($data) {
+    return "\"$data = p_{$data}\"";
+},$columns));
+
+$class->addMethod("getArgument")->setBody("
+\$columns = [
+$arguments,
+\"account uuid\",
+];
+return implode(\",\",\$columns);
+");
+
+$class->addMethod("getBody")->setBody("
+
+\$TABLE = \"$name\";
+\$SET = [
+    $SET,
+    \"updated_at = now()\",
+    \"updated_acc = account\",
+];
+
+\$SET = implode(\",\", \$SET);
+return \"UPDATE {\$TABLE} SET {\$SET} WHERE {\$TABLE}.\\\"id\\\" = p_id;\";
+        
+");
+
+
+// to generate PHP code simply cast to string or use echo:
+echo $class;
+
+?>

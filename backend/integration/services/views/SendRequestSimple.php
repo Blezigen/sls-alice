@@ -1,0 +1,1 @@
+<ns6:<?= $request ?>Request xmlns:ns6="urn://artefacts-russiatourism-ru/services/message-exchange/types/<?= $request ?>" />

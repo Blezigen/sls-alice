@@ -1,0 +1,48 @@
+#!/usr/bin/env php
+<?php
+
+exec('git diff --cached --name-only', $stagedFiles);
+$PROJECT_DIR = trim(shell_exec('git rev-parse --show-toplevel'));
+$BACKEND_DIR = "{$PROJECT_DIR}/backend";
+$PHP_CS_FIXER = "{$BACKEND_DIR}/vendor/bin/php-cs-fixer";
+$PHP_CS_CONFIG = "{$BACKEND_DIR}/.php-cs-fixer.php";
+$CS_OPTIONS = "--format=json --config={$PHP_CS_CONFIG}";
+
+echo "RUN pre-commit hook: $PROJECT_DIR\r\n";
+$toFixFiles = [];
+foreach ($stagedFiles as $fileName) {
+    if (preg_match('/\.php$/', $fileName) && is_file($fileName)) {
+        $toFixFiles[] = $fileName;
+    }
+}
+
+$fixedFiles = [];
+foreach (array_chunk($toFixFiles, 20) as $toFixFile) {
+    $command = sprintf("{$PHP_CS_FIXER} fix $CS_OPTIONS %s",
+        implode(' ', $toFixFile));
+
+    exec($command, $output, $exitCode);
+    $data = $output[array_key_last($output ?? [])];
+    $result = json_decode($data, true);
+
+    $fixedFiles = [
+        ...$fixedFiles,
+        ...array_map(function ($data) {
+            $arr = explode('\\', $data['name']);
+            array_shift($arr);
+
+            return implode('\\', $arr);
+        }, $result['files']),
+    ];
+}
+
+foreach ($fixedFiles as $fixedFile) {
+    exec("git add $fixedFile", $outputAdd, $exitCodeAdd);
+}
+
+if (count($fixedFiles)) {
+    echo sprintf("Code style fixes were applied to the following files:\n\n- %s\n\nFiles were added to the commit after fixes.\n\n",
+        implode("\n- ", $fixedFiles));
+}
+
+exit(0);

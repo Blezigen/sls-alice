@@ -1,0 +1,20 @@
+{
+  "date": "{Дата применения расчётов}",
+  "ship_id": "{id корабля}",
+  "beautiful_day_price": "{Цена идеальных суток корабля}",
+  "tours": [
+      {
+        "id" : "{id тура}",
+        "beautiful_day_price": "{Цена идеальных суток тура}",
+        "cabin_classes":[
+          {
+            "id" : "{id класса каюты}",
+            "coefficient" : null,
+            "price" : null,
+            "changed_price" : null,
+            "changed_coefficient" : null
+          }
+        ]
+      }
+  ]
+}
