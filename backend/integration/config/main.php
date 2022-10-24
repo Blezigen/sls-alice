@@ -1,5 +1,7 @@
 <?php
 
+use common\models\User;
+
 $params = array_merge(
     require __DIR__ . '/params.php',
     require __DIR__ . '/params-local.php',
@@ -60,7 +62,7 @@ return [
     'components' => [
         'user' => [
             'class' => \common\modules\permission\User::class,
-            'identityClass' => \common\models\Account::class,
+            'identityClass' => \common\models\User::class,
             'enableAutoLogin' => false,
             'enableSession' => false,
         ],

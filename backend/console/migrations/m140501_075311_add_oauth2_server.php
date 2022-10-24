@@ -48,14 +48,14 @@ class m140501_075311_add_oauth2_server extends \yii\db\Migration
                 'redirect_uri' => Schema::TYPE_STRING . '(1000) NOT NULL',
                 'grant_types' => Schema::TYPE_STRING . '(100) NOT NULL',
                 'scope' => Schema::TYPE_STRING . '(2000) DEFAULT NULL',
-                'user_id' => 'uuid DEFAULT NULL',
+                'user_id' => Schema::TYPE_INTEGER.' DEFAULT NULL',
                 $this->primaryKeyDefinition('client_id'),
             ], $tableOptions);
 
             $this->createTable('{{%oauth_access_tokens}}', [
                 'access_token' => Schema::TYPE_STRING . '(40) NOT NULL',
                 'client_id' => Schema::TYPE_STRING . '(32) NOT NULL',
-                'user_id' => 'uuid  DEFAULT NULL',
+                'user_id' => Schema::TYPE_INTEGER.' DEFAULT NULL',
                 'expires' => Schema::TYPE_TIMESTAMP . " NOT NULL DEFAULT $now $on_update_now",
                 'scope' => Schema::TYPE_STRING . '(2000) DEFAULT NULL',
                 $this->primaryKeyDefinition('access_token'),
@@ -65,7 +65,7 @@ class m140501_075311_add_oauth2_server extends \yii\db\Migration
             $this->createTable('{{%oauth_refresh_tokens}}', [
                 'refresh_token' => Schema::TYPE_STRING . '(40) NOT NULL',
                 'client_id' => Schema::TYPE_STRING . '(32) NOT NULL',
-                'user_id' => 'uuid DEFAULT NULL',
+                'user_id' => Schema::TYPE_INTEGER.' DEFAULT NULL',
                 'expires' => Schema::TYPE_TIMESTAMP . " NOT NULL DEFAULT $now $on_update_now",
                 'scope' => Schema::TYPE_STRING . '(2000) DEFAULT NULL',
                 $this->primaryKeyDefinition('refresh_token'),
@@ -75,7 +75,7 @@ class m140501_075311_add_oauth2_server extends \yii\db\Migration
             $this->createTable('{{%oauth_authorization_codes}}', [
                 'authorization_code' => Schema::TYPE_STRING . '(40) NOT NULL',
                 'client_id' => Schema::TYPE_STRING . '(32) NOT NULL',
-                'user_id' => Schema::TYPE_INTEGER . ' DEFAULT NULL',
+                'user_id' => Schema::TYPE_INTEGER.' DEFAULT NULL',
                 'redirect_uri' => Schema::TYPE_STRING . '(1000) NOT NULL',
                 'expires' => Schema::TYPE_TIMESTAMP . " NOT NULL DEFAULT $now $on_update_now",
                 'scope' => Schema::TYPE_STRING . '(2000) DEFAULT NULL',

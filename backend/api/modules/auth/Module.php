@@ -27,7 +27,7 @@ class Module extends \common\AbstractModule implements IBootstrapSetting
     public function bootstrap($app)
     {
 //        $app->user->identityClass = User::class;
-        parent::bootstrap($app); 
+        parent::bootstrap($app);
     }
 
     public function routes($moduleID)
@@ -38,28 +38,30 @@ class Module extends \common\AbstractModule implements IBootstrapSetting
             // </editor-fold>
             // <editor-fold desc="auth">
 
-            'POST auth/jwt/login' => 'auth/jwt/login',
-            'POST auth/jwt/refresh' => 'auth/jwt/refresh',
+            'POST auth/jwt/login'    => 'auth/jwt/login',
+            'POST auth/jwt/refresh'  => 'auth/jwt/refresh',
             'POST auth/jwt/recovery' => 'auth/jwt/recovery',
-            'POST auth/jwt/revoke' => 'auth/jwt/revoke',
+            'POST auth/jwt/revoke'   => 'auth/jwt/revoke',
 
-            'OPTIONS auth/jwt/login' => 'auth/jwt/options',
-            'OPTIONS auth/jwt/refresh' => 'auth/jwt/options',
+            'OPTIONS auth/jwt/login'    => 'auth/jwt/options',
+            'OPTIONS auth/jwt/refresh'  => 'auth/jwt/options',
             'OPTIONS auth/jwt/recovery' => 'auth/jwt/options',
-            'OPTIONS auth/jwt/revoke' => 'auth/jwt/options',
+            'OPTIONS auth/jwt/revoke'   => 'auth/jwt/options',
 
-            'GET,HEAD oauth/login' => 'auth/o-auth/login',
-            'GET,HEAD oauth/authorize' => 'auth/o-auth/authorize',
+            'GET,HEAD oauth/login'         => 'auth/site/login',
+            'GET,HEAD oauth/authorize'     => 'auth/site/authorize',
+            'POST,HEAD oauth/token'         => 'auth/site/token',
+            'GET,HEAD oauth/refresh-token' => 'auth/site/refresh-token',
 
-            'GET auth' => 'auth/default/login-view',
-            'POST auth' => 'auth/default/login',
-            'POST auth/login' => 'auth/default/login',
-            'POST auth/logout' => 'auth/default/logout',
-            'POST oauth/login' => 'auth/o-auth/login',
+            'GET auth'              => 'auth/default/login-view',
+            'POST auth'             => 'auth/default/login',
+            'POST auth/login'       => 'auth/default/login',
+            'POST auth/logout'      => 'auth/default/logout',
+            'POST oauth/login'      => 'auth/o-auth/login',
 
             // </editor-fold>
             // <editor-fold desc="registrations">
-            'POST auth/remember' => "{$moduleID}/remember/create",
+            'POST auth/remember'    => "{$moduleID}/remember/create",
             'OPTIONS auth/remember' => "{$moduleID}/remember/options",
             // </editor-fold>
         ];
@@ -69,26 +71,26 @@ class Module extends \common\AbstractModule implements IBootstrapSetting
     {
         return [
             SettingConstant::PLUGIN_SECTION => [
-                'title' => 'Настройка авторизации',
+                'title'       => 'Настройка авторизации',
                 'description' => 'Описание секции',
-                'settings' => [
+                'settings'    => [
                     SettingConstant::REQUIRED_TWO_FACTOR => [
-                        'title' => 'Включить двухфакторную авторизацию',
+                        'title'       => 'Включить двухфакторную авторизацию',
                         'description' => 'Описание настройки',
-                        'default' => false,
-                        'values' => [
+                        'default'     => false,
+                        'values'      => [
                             [
-                                'value' => false,
+                                'value'   => false,
                                 'summary' => SettingSummary::make([
                                     "access" => SettingAccess::make(['roles' => ['admin']])
                                 ]),
                             ],
                         ],
                     ],
-                    SettingConstant::REQUIRED_IP_CHECK => [
-                        'title' => 'Включить ограничение входа по IP',
+                    SettingConstant::REQUIRED_IP_CHECK   => [
+                        'title'       => 'Включить ограничение входа по IP',
                         'description' => 'Описание настройки',
-                        'default' => false,
+                        'default'     => false,
                     ],
                 ],
             ],

@@ -62,7 +62,7 @@ class InitController extends AbstractConsoleController
                 'client_id' => 'yandex.alice',
                 'client_secret' => Yii::$app->security->generateRandomString(32),
                 'redirect_uri' => 'https://хайруллин.рус/',
-                'grant_types' => 'refresh_token password implicit',
+                'grant_types' => 'client_credentials authorization_code password refresh_token password implicit',
                 'scope' => null,
                 'user_id' => null,
             ],
@@ -115,12 +115,12 @@ class InitController extends AbstractConsoleController
     public function actionBaseDocUser()
     {
         $this->output->write('Init doc-user: ');
-        $account = Account::find()->andWhere(['username' => 'doc'])->one();
+        $account = User::find()->andWhere(['username' => 'doc'])->one();
         if ($account) {
             $account->role = 'role_doc';
             $account->save();
         } else {
-            $account = new Account([
+            $account = new User([
                 'status_cid' => null,
                 'username' => 'doc',
                 'role' => 'role_doc',
@@ -139,12 +139,12 @@ class InitController extends AbstractConsoleController
     public function actionFizUser()
     {
         $this->output->write('Init fiz-user: ');
-        $account = Account::find()->andWhere(['username' => '79000000001'])->one();
+        $account = User::find()->andWhere(['username' => '79000000001'])->one();
         if ($account) {
             $account->role = 'role_physical';
             $account->save();
         } else {
-            $account = new Account([
+            $account = new User([
                 'status_cid' => null,
                 'username' => '79000000001',
                 'role' => 'role_physical',
@@ -177,12 +177,12 @@ class InitController extends AbstractConsoleController
     public function actionAgentUser()
     {
         $this->output->write('Init agent-user: ');
-        $account = Account::find()->andWhere(['username' => '79000000002'])->one();
+        $account = User::find()->andWhere(['username' => '79000000002'])->one();
         if ($account) {
             $account->role = 'role_agent';
             $account->save();
         } else {
-            $account = new Account([
+            $account = new User([
                 'status_cid' => null,
                 'username' => '79000000002',
                 'role' => 'role_agent',

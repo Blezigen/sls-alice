@@ -29,7 +29,7 @@ class Handler extends ErrorHandler
         ) {
             $exceptionTrace = $ex->getTrace();
             $traces = array_slice($exceptionTrace, 0,
-                $this->maxTraceSourceLines);
+                10);
 
             $debug = [
                 'debug' => [

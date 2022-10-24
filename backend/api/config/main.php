@@ -14,6 +14,7 @@ return \yii\helpers\ArrayHelper::merge($common, [
     'controllerNamespace' => 'api\controllers',
     'bootstrap' => [
         'collection',
+        'users',
         'auth',
         \api\Bootstrap::class,
     ],
@@ -81,6 +82,9 @@ return \yii\helpers\ArrayHelper::merge($common, [
         ],
         'collection' => [
             'class' => \api\modules\collection\Module::class,
+        ],
+        'users' => [
+            'class' => \api\modules\users\Module::class,
         ],
     ],
     'params' => $params,

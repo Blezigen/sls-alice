@@ -1,0 +1,26 @@
+{
+  "request_id": "id",
+  "payload": {
+    "user_id": "id",
+    "devices": [
+      {
+        "id": "data",
+        "name": "data",
+        "description": "data",
+        "room": "data",
+        "type": "data",
+        "custom_data": "data",
+        "capabilities": [
+        ],
+        "properties": [
+        ],
+        "device_info": {
+          "manufacturer": "data",
+          "model": "data",
+          "hw_version": "data",
+          "sw_version": "data"
+        }
+      }
+    ]
+  }
+}

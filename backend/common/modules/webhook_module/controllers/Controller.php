@@ -4,6 +4,7 @@ namespace common\modules\webhook_module\controllers;
 
 use common\AbstractController;
 use common\models\Account;
+use common\models\User;
 use yii\web\Response;
 
 class Controller extends AbstractController
@@ -23,7 +24,7 @@ class Controller extends AbstractController
             'basicAuth' => [
                 'class' => \yii\filters\auth\HttpBasicAuth::class,
                 'auth' => function ($username, $password) {
-                    $user = Account::findByUsername($username);
+                    $user = User::findByUsername($username);
                     if ($user && $user->validatePassword($password)) {
                         return $user;
                     }

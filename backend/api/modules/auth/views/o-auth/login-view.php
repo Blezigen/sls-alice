@@ -9,9 +9,6 @@ use yii\grid\GridView;
 $this->title = 'Вход в систему';
 ?>
 <div class="align-content-center">
-    <div class="mt-5 offset-lg-3 col-lg-6 align-content-center">
-        <?php echo file_get_contents('http://crm.rdbx.ru/copyright'); ?>
-    </div>
     <div class="mt-5 offset-lg-3 col-lg-6">
         <h1><?php echo \yii\helpers\Html::encode($this->title); ?></h1>
 

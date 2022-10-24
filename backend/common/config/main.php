@@ -263,7 +263,7 @@ $config = [
                 ],
             ],
             'storageMap' => [
-                'user_credentials' => \common\models\Account::class,
+                'user_credentials' => \common\models\User::class,
                 'public_key' => \common\PublicKeyStorage::class,
                 'access_token' => \OAuth2\Storage\JwtAccessToken::class,
             ],
@@ -274,6 +274,9 @@ $config = [
                 'refresh_token' => [
                     'class' => \OAuth2\GrantType\RefreshToken::class,
                     'always_issue_new_refresh_token' => true,
+                ],
+                'authorization_code' => [
+                    'class' => \OAuth2\GrantType\AuthorizationCode::class,
                 ],
             ],
             'options' => [
