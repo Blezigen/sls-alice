@@ -23,8 +23,8 @@ class m000000_000000_create_user_table extends Migration
 
             'last_login_at' => $this->timestamp()->null(),
             'created_at' => $this->dateTime()->notNull(),
-            'deleted_At' => $this->dateTime()->notNull(),
-            'updated_at' => $this->dateTime()->notNull(),
+            'deleted_at' => $this->dateTime()->null(),
+            'updated_at' => $this->dateTime()->null(),
         ], $tableOptions);
 
     }

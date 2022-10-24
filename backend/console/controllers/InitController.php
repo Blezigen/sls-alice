@@ -3,6 +3,7 @@
 namespace console\controllers;
 
 use api\modules\exec_module\controllers\ExecController;
+use Carbon\Carbon;
 use common\exceptions\ValidationException;
 use common\IConstant;
 use common\models\Account;
@@ -93,9 +94,13 @@ class InitController extends AbstractConsoleController
             $account->save();
         } else {
             $account = new User([
-//                'status_cid' => null,
+                'status_id' => 1,
                 'username' => '79000000000',
+                'auth_key' => 'auth_key',
                 'password_hash' => Yii::$app->security->generatePasswordHash('tester'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+                'deleted_at' => null,
             ]);
             if (!$account->validate()) {
                 throw new ValidationException($account->errors);

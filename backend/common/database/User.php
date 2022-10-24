@@ -15,8 +15,8 @@ use Yii;
  * @property string $auth_key
  * @property string|null $last_login_at
  * @property string $created_at
- * @property string $deleted_At
- * @property string $updated_at
+ * @property string|null $deleted_at
+ * @property string|null $updated_at
  *
  */
 class User extends \common\BaseActiveRecord
@@ -41,9 +41,7 @@ class User extends \common\BaseActiveRecord
             "RequiredPasswordHash" => [['password_hash'], 'required'],
             "RequiredAuthKey" => [['auth_key'], 'required'],
             "RequiredCreatedAt" => [['created_at'], 'required'],
-            "RequiredDeletedAt" => [['deleted_At'], 'required'],
-            "RequiredUpdatedAt" => [['updated_at'], 'required'],
-            [['last_login_at', 'created_at', 'deleted_At', 'updated_at'], 'safe'],
+            [['last_login_at', 'created_at', 'deleted_at', 'updated_at'], 'safe'],
             [['username', 'password_hash', 'password_reset_token'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['password_reset_token'], 'unique'],
@@ -65,7 +63,7 @@ class User extends \common\BaseActiveRecord
             'auth_key' => 'Auth Key',
             'last_login_at' => 'Last Login At',
             'created_at' => 'Created At',
-            'deleted_At' => 'Deleted At',
+            'deleted_at' => 'Deleted At',
             'updated_at' => 'Updated At',
         ];
     }
