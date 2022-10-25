@@ -260,7 +260,7 @@ class DeviceController extends \yii\web\Controller
                 $id = $data['nwkAddr'];
                 $name = "Неизвестно $manufacture $model";
                 if ($type === self::DEVICE_TYPE_SWITCH) {
-                    $name = "Выключатель $manufacture $model";
+                    $name = 'Выключатель';
                 }
 
 //                if ($data[]){}
@@ -283,6 +283,14 @@ class DeviceController extends \yii\web\Controller
                             'reportable' => false,
                             'parameters' => [
                                 'split' => false,
+                            ],
+                        ],
+                        [
+                            'type' => 'devices.capabilities.toggle',
+                            'retrievable' => false,
+                            'reportable' => false,
+                            'parameters' => [
+                                'instance' => 'backlight',
                             ],
                         ],
                     ],
@@ -322,7 +330,7 @@ class DeviceController extends \yii\web\Controller
 //            _TZ3000_46t1rvdu
             preg_match("/_(?'model'[^_]+)_(?'serial'[^_]+)/", $data['ManufName'], $matches);
 
-            return $matches['model'] ?? "other";
+            return $matches['model'] ?? 'other';
         }
 
         return 'other';
@@ -335,7 +343,7 @@ class DeviceController extends \yii\web\Controller
 //            _TZ3000_46t1rvdu
             preg_match("/_(?'model'[^_]+)_(?'serial'[^_]+)/", $data['ManufName'], $matches);
 
-            return $matches['serial'] ?? "other";
+            return $matches['serial'] ?? 'other';
         }
 
         return 'other';
