@@ -21,6 +21,9 @@ class m000000_000000_create_user_table extends Migration
             'password_reset_token' => $this->string()->unique(),
             'auth_key' => $this->string(32)->notNull(),
 
+            'host' => $this->string()->null(),
+            'token' => $this->string()->null(),
+
             'last_login_at' => $this->timestamp()->null(),
             'created_at' => $this->dateTime()->notNull(),
             'deleted_at' => $this->dateTime()->null(),

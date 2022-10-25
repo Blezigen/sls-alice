@@ -14,6 +14,7 @@ use yii\web\Controller;
 class SiteController extends Controller
 {
     public $enableCsrfValidation = false;
+
     /**
      * {@inheritdoc}
      */
@@ -26,9 +27,12 @@ class SiteController extends Controller
                     ['class' => HttpBearerAuth::className()],
                     ['class' => QueryParamAuth::className(), 'tokenParam' => 'accessToken'],
                 ],
-                "optional" => [
-                    "token",
-                    "authorize",
+                'except' => [
+                    'options',
+                    'authorize',
+                ],
+                'optional' => [
+                    'token',
                 ],
             ],
             'exceptionFilter' => [
@@ -66,8 +70,10 @@ class SiteController extends Controller
             \Yii::$app->response->format = \yii\web\Response::FORMAT_HTML;
 //            dd($response->getHttpHeader('Location'));
             $response->send();
+
             return \Yii::$app->response->redirect($response->getHttpHeader('Location'));
         }
+
         return null;
     }
 
@@ -86,7 +92,8 @@ class SiteController extends Controller
         /* @var $response \filsh\yii2\oauth2server\Response */
         \Yii::$app->getResponse()->format = \yii\web\Response::FORMAT_JSON;
 
-        \Yii::error(json_encode(["body" => json_encode($response->getResponseBody(), true)], JSON_PRETTY_PRINT|JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+        \Yii::error(json_encode(['body' => json_encode($response->getResponseBody(), true)], JSON_PRETTY_PRINT | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
         return json_decode($response->getResponseBody(), true);
     }
 
