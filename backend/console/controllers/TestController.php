@@ -18,6 +18,7 @@ use common\models\OrderPlace;
 use common\models\VirtualCabinStatistic;
 use common\ReservationService;
 use console\AbstractConsoleController;
+use GuzzleHttp\Client;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\ProgressBar;
 use yii\console\ExitCode;
@@ -32,161 +33,23 @@ class TestController extends AbstractConsoleController
         parent::init();
     }
 
-    public function actionF()
+    public function actionUpdate($userId)
     {
-        $login = Account::find()->one();
-//        $trans = \Yii::$app->db->beginTransaction();
-        $objectDelete = new Affiliate();
-        $objectDelete->phone = '13123123';
-        $objectDelete->updated_acc = $login->id;
-        $objectDelete->save();
-
-        $object = Affiliate::findOne(11);
-        $object->phone = '13123123';
-        $object->updated_acc = $login->id;
-        $object->save();
-
-        $objectDelete->delete();
-
-        dd($object->id);
-//        $trans->rollBack();
-    }
-
-    public function actionPerm()
-    {
-        $service = \Yii::$container->get(NavigationService::class);
-//        $place = OrderPlace::findOne(1);
-//        $place->discount_card_id = 1;
-//        $place->discount_category_default_id = 1;
-//        $place->discount_category_early_id = null;
-//        $place->discount_category_constant_id = null;
-//        $place->discount_category_online_id = null;
-//        $place->save();
-    }
-
-    /**
-     * Установка цветов в консоли. Где ключ элемента массива это тег, а значение это цвет.
-     *
-     * @return OutputFormatterStyle[]
-     */
-    protected function colors()
-    {
-        return [
-            'order' => new OutputFormatterStyle('red', null, ['blink']),
-            'place' => new OutputFormatterStyle('green', null, ['blink']),
-            'cabin' => new OutputFormatterStyle('blue', null, ['blink']),
+        $notifyData = [
+            'ts' => time(),
+            'payload' => [
+                'user_id' => "$userId",
+            ],
         ];
-    }
-
-    public function actionPayment()
-    {
-        $query = CabinStatistic::find()
-            ->byVersion(Carbon::now())
-            ->andWhere(['cabin_q.id' => 1]);
-//        dd($query->createCommand()->rawSql);
-        $data = $query->all();
-        dd(ArrayHelper::toArray($data));
-    }
-
-    public function actionExec()
-    {
-//        $data = VirtualCabinStatistic::find()->all();
-//        dd(ArrayHelper::toArray($data);
-        $exec = new OrderAddTempReserveExecAction('exec', \Yii::$app->controller);
-        $data = $exec->run(1, ['102'], '', 1, true);
-        exit;
-    }
-
-    public function actionFree()
-    {
-        $manager = new ShipService();
-        $data = $manager->analyseCabinByNumber(1, '106');
-//        dd(ArrayHelper::toArray($data));
-        $manager->freeCabin(1, 1, '106', 'Название', true);
-    }
-
-    public function actionTest($start = 0)
-    {
-        $iterate = 0;
-        $dataQuery = Order::find()
-            ->with([
-                'orderCabins', 'orderCabins.orderPlaces',
-                'orderCabins.orderPlaces.placeType',
-                'orderCabins.orderPlaces.discountCategoryDefault',
-                'orderCabins.orderPlaces.discountCategoryEarly',
-                'orderCabins.orderPlaces.discountCategoryConstant',
-                'orderCabins.orderPlaces.discountCategoryOnline',
-                'orderCabins.orderPlaces.discountCard',
-            ])
-            ->andWhere(['>=', 'id', $start])
-            ->orderBy('id');
-
-        $pagination = new Pagination([
-            'pageSize' => 100,
+        // y0_AgAAAAAED-OOAAT7owAAAADR0VWMwyENgPPeR8q3oAE2x3h7BXWV1X8
+        $skillId = 'c2a5ac3f-2a7e-43a9-9d53-005cfce079ac';
+        $client = new Client();
+        $result = $client->post("https://dialogs.yandex.net/api/v1/skills/$skillId/callback/discovery", [
+            'http_errors' => false,
+            'headers' => [
+                'Authorization' => 'OAuth y0_AgAAAAAED-OOAAT7owAAAADR0VWMwyENgPPeR8q3oAE2x3h7BXWV1X8',
+            ],
+            'json' => $notifyData,
         ]);
-
-        $provider = new ActiveDataProvider([
-            'query' => $dataQuery,
-            'pagination' => &$pagination,
-        ]);
-
-        $pagination->page = 0;
-        $models = $provider->getModels();
-
-        $progressBar = new ProgressBar($this->output);
-        $progressBar->setFormat('debug');
-        $progressBar->setMaxSteps($provider->totalCount);
-        $transaction = \Yii::$app->db->beginTransaction();
-        try {
-            for (
-                $provider->pagination->page = 1;
-                $provider->pagination->page <= $provider->pagination->pageCount;
-                ++$provider->pagination->page
-            ) {
-                foreach ($models as $order) {
-                    ++$iterate;
-                    foreach ($order->orderCabins as $orderCabin) {
-                        foreach ($orderCabin->orderPlaces as $orderPlace) {
-                            $orderPlace->save();
-                        }
-                        $orderCabin->save();
-                    }
-                    $order->save();
-                    $progressBar->advance();
-                }
-                $provider->setModels(null);
-                $models = $provider->getModels();
-            }
-            $transaction->commit();
-        } catch (\Exception $e) {
-            $transaction->rollBack();
-        }
-        $progressBar->finish();
-
-        return ExitCode::OK;
-    }
-
-    public function actionWaiting()
-    {
-        /** @var IOrderService|OrderService $service */
-        $service = \Yii::$container->get(IOrderService::class);
-        /** @var ReservationService $reservationService */
-        $reservationService = \Yii::$container->get(ReservationService::class);
-
-        $result = $service->addTempReserve(3, ['107'], 'Комментарий', 1, true);
-
-        $reservationService->addWaitingList(3, '107', 2,
-            Carbon::now()->addMinutes(5), true);
-//        dd($result);
-    }
-
-    public function actionR()
-    {
-        \Yii::$app->queue->push(new CheckReservationJob());
-    }
-
-    public function actionTest2()
-    {
-        (new ExpiredContractCompanyNotifyJob())->execute(null);
     }
 }

@@ -154,6 +154,84 @@ class DeviceController extends \yii\web\Controller
         ]);
     }
 
+    public function updateDiscover()
+    {
+        $userId = \Yii::$app->user->id;
+        $notifyData = [
+            'ts' => time(),
+            'payload' => [
+                'user_id' => "$userId",
+            ],
+        ];
+        // y0_AgAAAAAED-OOAAT7owAAAADR0VWMwyENgPPeR8q3oAE2x3h7BXWV1X8
+        $skillId = 'c2a5ac3f-2a7e-43a9-9d53-005cfce079ac';
+        $client = new Client();
+        $result = $client->post("https://dialogs.yandex.net/api/v1/skills/$skillId/callback/discovery", [
+            'http_errors' => false,
+            'headers' => [
+                'Authorization' => 'OAuth y0_AgAAAAAED-OOAAT7owAAAADR0VWMwyENgPPeR8q3oAE2x3h7BXWV1X8',
+            ],
+            'json' => $notifyData,
+        ]);
+    }
+
+    public function updateStates()
+    {
+        $userId = \Yii::$app->user->id;
+        /** @var User $identity */
+        $identity = \Yii::$app->user->identity;
+
+        $host = $identity->host;
+        $token = $identity->token;
+
+        $client2 = new Client([
+            'base_uri' => "http://{$host}/api/",
+        ]);
+
+        $result = $client2->get('zigbee/devices', [
+            'query' => [
+                'token' => $token,
+            ],
+        ]);
+        $slsDevices = json_decode((string) $result->getBody(), true);
+
+        $notifyDevices = array_values(ArrayHelper::map($slsDevices, 'friendly_name',
+            function ($data) {
+                $id = $data['nwkAddr'];
+
+                return [
+                    'id' => $id,
+                    'capabilities' => [
+                        [
+                            'type' => 'devices.capabilities.on_off',
+                            'state' => [
+                                'instance' => 'on',
+                                'value' => false,
+                            ],
+                        ],
+                    ],
+                ];
+            }));
+
+        $notifyData = [
+            'ts' => time(),
+            'payload' => [
+                'user_id' => "$userId",
+                'devices' => $notifyDevices,
+            ],
+        ];
+        // y0_AgAAAAAED-OOAAT7owAAAADR0VWMwyENgPPeR8q3oAE2x3h7BXWV1X8
+        $skillId = 'c2a5ac3f-2a7e-43a9-9d53-005cfce079ac';
+        $client = new Client();
+        $result = $client->post("https://dialogs.yandex.net/api/v1/skills/$skillId/callback/state", [
+            'http_errors' => false,
+            'headers' => [
+                'Authorization' => 'OAuth y0_AgAAAAAED-OOAAT7owAAAADR0VWMwyENgPPeR8q3oAE2x3h7BXWV1X8',
+            ],
+            'json' => $notifyData,
+        ]);
+    }
+
     public function actionAction()
     {
         /** @var User $identity */
@@ -166,63 +244,95 @@ class DeviceController extends \yii\web\Controller
         $requestId = \Yii::$app->request->headers->get('X-Request-Id');
         $data = \Yii::$app->request->post();
         $devices = $data['payload']['devices'];
+        $outDevices = [];
         foreach ($devices as $device) {
-            if ($device['id'] === 'uniq_1') {
-                $capabilities = $device['capabilities'];
-                $type = $capabilities[0]['type'];
-                $state = $capabilities[0]['state']['value'];
-                $url
-                    = "http://{$host}/api/scripts?action=evalFile&path=/alice.lua&token={$token}";
-                \Yii::debug($url);
-                file_get_contents($url);
-            }
+            $capabilities = $device['capabilities'];
+            $id = $device['id'];
+//            $type = $capabilities[0]['type'];
+//            $state = $capabilities[0]['state']['value'];
+            $client = new Client([
+                'base_uri' => "http://{$host}/api/",
+            ]);
+
+            $param = [
+                'id' => $id,
+                'capability' => $capabilities[0],
+            ];
+            \Yii::debug(base64_encode(json_encode($param)));
+            $result = $client->get('scripts', [
+                'query' => [
+                    'action' => 'evalFile',
+                    'path' => '/alice.lua',
+                    'param' => base64_encode(json_encode($param)),
+                    'token' => $token,
+                ],
+            ]);
+
+            $response = json_decode((string)$result->getBody(), true);
+            $result = json_decode($response['result'], true);
+
+            $capabilities[0]['state']['action_result']['status'] = 'DONE';
+
+            $outDevices[] = [
+                'id' => $id,
+                'capabilities' => $capabilities,
+            ];
         }
+
+        $this->updateStates();
 
         return [
             'request_id' => $requestId,
             'payload' => [
-                'devices' => [
-                    [
-                        'id' => 'uniq_1',
-                        'capabilities' => [
-                            [
-                                'type' => 'devices.capabilities.on_off',
-                                'state' => [
-                                    'instance' => 'on',
-                                    'action_result' => [
-                                        'status' => 'DONE',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
+                'devices' => $outDevices,
             ],
         ];
     }
 
     public function actionQuery()
     {
+        /** @var User $identity */
+        $identity = \Yii::$app->user->identity;
+
+        $host = $identity->host;
+        $token = $identity->token;
+
         $userId = \Yii::$app->user->id;
         $requestId = \Yii::$app->request->headers->get('X-Request-Id');
+
+        $client = new Client([
+            'base_uri' => "http://{$host}/api/",
+        ]);
+
+        $result = $client->get('zigbee/devices', [
+            'query' => [
+                'token' => $token,
+            ],
+        ]);
+        $slsDevices = json_decode((string) $result->getBody(), true);
+
+        $devices = array_values(ArrayHelper::map($slsDevices, 'friendly_name',
+            function ($data) {
+                $id = $data['nwkAddr'];
+
+                return [
+                    'id' => $id,
+                    'capabilities' => [
+                        [
+                            'type' => 'devices.capabilities.on_off',
+                            'state' => [
+                                'instance' => 'on',
+                                'value' => false,
+                            ],
+                        ],
+                    ],
+                ];
+            }));
 
         return [
             'request_id' => $requestId,
             'payload' => [
-                'devices' => [
-                    [
-                        'id' => 'uniq_1',
-                        'capabilities' => [
-                            [
-                                'type' => 'devices.capabilities.on_off',
-                                'state' => [
-                                    'instance' => 'on',
-                                    'value' => true,
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
+                'devices' => $devices,
             ],
         ];
     }
@@ -252,16 +362,55 @@ class DeviceController extends \yii\web\Controller
         $devices = array_values(ArrayHelper::map($slsDevices, 'friendly_name',
             function ($data) {
                 $manufacture = $this->getManufacture($data);
+
                 $model = $this->getManufactureModel($data);
+                $serial = $this->getManufactureSerial($data);
 
                 $desc = 'Описание';
                 $room = 'Спальня';
                 $type = $this->getDeviceType($data);
                 $id = $data['nwkAddr'];
+                $capabilities = [];
+                $properties = [];
                 $name = "Неизвестно $manufacture $model";
                 if ($type === self::DEVICE_TYPE_SWITCH) {
                     $name = 'Выключатель';
                 }
+
+                if ($type === self::DEVICE_TYPE_SWITCH ){
+                    $capabilities = [
+                        [
+                            'type' => 'devices.capabilities.on_off',
+                            'retrievable' => true,
+                            'reportable' => true,
+                            'parameters' => [
+                                'split' => false,
+                            ],
+                        ]
+                    ];
+                }
+                if ($type === self::DEVICE_TYPE_SWITCH && $model === 'TZ3000' && $serial === 'wkai4ga5'){
+                    $capabilities = [
+                        [
+                            'type' => 'devices.capabilities.on_off',
+                            'retrievable' => true,
+                            'reportable' => true,
+                            'parameters' => [
+                                'split' => false,
+                            ],
+                        ],
+                        [
+                            'type' => 'devices.capabilities.toggle',
+                            'retrievable' => true,
+                            'reportable' => true,
+                            'parameters' => [
+                                'split' => false,
+                            ],
+                        ],
+                    ];
+                }
+
+
 
 //                if ($data[]){}
 
@@ -276,24 +425,7 @@ class DeviceController extends \yii\web\Controller
                         'model_id' => $data['ModelId'],
                         'friendly_name' => $data['friendly_name'],
                     ],
-                    'capabilities' => [
-                        [
-                            'type' => 'devices.capabilities.on_off',
-                            'retrievable' => false,
-                            'reportable' => false,
-                            'parameters' => [
-                                'split' => false,
-                            ],
-                        ],
-                        [
-                            'type' => 'devices.capabilities.toggle',
-                            'retrievable' => false,
-                            'reportable' => false,
-                            'parameters' => [
-                                'instance' => 'backlight',
-                            ],
-                        ],
-                    ],
+                    'capabilities' => $capabilities,
                     'properties' => [
                     ],
                     'device_info' => [
@@ -356,6 +488,12 @@ class DeviceController extends \yii\web\Controller
         $serial = $this->getManufactureSerial($data);
 
         if ($manufacture === 'TUYA' && $model === 'TZ3000' && $serial === '46t1rvdu') {
+            return self::DEVICE_TYPE_SWITCH;
+        }
+        if ($manufacture === 'TUYA' && $model === 'TZ3210' && $serial === 'r5afgmkl') {
+            return self::DEVICE_TYPE_LIGHT;
+        }
+        if ($manufacture === 'TUYA' && $model === 'TZ3000' && $serial === 'wkai4ga5') {
             return self::DEVICE_TYPE_SWITCH;
         }
 
